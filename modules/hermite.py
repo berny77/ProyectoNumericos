@@ -6,6 +6,13 @@ class HermiteInterpolation:
         self.z_values = []
         self.q_values = []
 
+    def format_number(self, num):
+        """Formatea un número para mostrarlo como entero si no tiene decimales, o con decimales si los tiene."""
+        if num == int(num):
+            return str(int(num))
+        else:
+            return str(num)
+
     def construct_table(self, n):
         """Construye la tabla de diferencias divididas de Hermite."""
         size = 2 * n
@@ -35,5 +42,11 @@ class HermiteInterpolation:
 
     def get_polynomial(self):
         """Construye el polinomio de Hermite como una representación simplificada."""
-        polynomial_terms = [f"{self.q_values[i][i]}" for i in range(len(self.z_values))]
+        polynomial_terms = []
+        n = len(self.x_values)
+        for i in range(2 * n):
+            term = self.format_number(self.q_values[i][i])
+            for j in range(i):
+                term += f"*(x - {self.format_number(self.z_values[j])})"
+            polynomial_terms.append(term)
         return " + ".join(polynomial_terms)
